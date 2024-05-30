@@ -1,0 +1,3 @@
+The code here relates to my fourth year project on detecting the first stars in the universe. This done by creating a simulation of the universe using 21cmfast then, adding noise to the signal then, removing
+the noise by the chosen method to recover the original signal. However, due to the noise being far greater than the signal this is a difficult task to undergo. By creating a simulation and seeing how well we can remove
+the data we can apply the same method to real world data collected by telescopes to see what results are found.
