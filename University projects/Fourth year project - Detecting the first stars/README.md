@@ -3,5 +3,7 @@
 I used different techniques to analyse data, power spectrum, wavelet transform, correlation and cylindrical power spectrum.
 I didn't have enough time to use 3D k-space spectrums.
 
+I worked with a partner on this project but focused on diiferent aspects of the project.
+
 Fast21cm: https://github.com/21cmfast/21cmFAST.git
 
