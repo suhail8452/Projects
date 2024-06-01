@@ -5,13 +5,12 @@ Created on Tue Jan 16 11:53:07 2024
 @author: suhai
 """
 
-#Power law scaling for EBL
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
 
 
-# find the values of the parameters
+# Powerlaw for the scattering effect of the electrons
 def PowerLaw(r,nu,v,gamma,sigma,beta):
     coefficent = 1/(np.pi*(1+ nu))
     first_term = (v)**(-2) / (1 + (r/gamma)*sigma)
@@ -22,53 +21,49 @@ def PowerLaw(r,nu,v,gamma,sigma,beta):
     return wave
 
 
-#10 nm pixels
-#grid size is 1.01 micrometers by 1.01 micrometers
+# 10 nm for each pixels shown therfore,
+# the grid size is 1.01 micrometers by 1.01 micrometers
 pix = 10 #nm
 pix_size =int(101)
 
 #First image: shots
 shots = np.zeros((pix_size,pix_size))
 
-#doseage
+# Doseage and shots where the dosage is applied
 dose = 1
-
-shots[30:60,49:52]=  dose
-
+shots[30:60,49:52] =  dose
 
 
-
-#second image: gaussian
-
-exp = np.zeros((pix_size,pix_size))
-sim = np.zeros((pix_size,pix_size))
-
-
-cx = int(pix_size/2)
-cy = int(pix_size/2)
+# Second image: gaussian using experimental and simulation values
+exp, sim = np.zeros((pix_size,pix_size)), np.zeros((pix_size,pix_size))
+# centre of the image
+cx,cy = int(pix_size/2), int(pix_size/2)
 
 
-#pixel distance from each other is 10nm
-###parameter used for the experiment
-#gamma short range
+# Pixel distance from each other is 10nm
+# Parameter used for the experiment
+
+# Gamma short range
 gamma = 8.01
-#gaussian weight by sigma and eta
+# Gaussian weight by sigma and eta
 sigma,nu = 2.6,0.75
-#long range effect
+# Long range effect
 beta = 28500 
-#chosen to normalise PSF
+# Chosen to normalise PSF
 v = 18.3 
 
-###parameter used for the simulation
-#gamma short range
+# Parameter used for the simulation
+# Gamma short range
 gamma1 = 3.07
-#gaussian weight by sigma and nu
+# Gaussian weight by sigma and nu
 sigma1,nu1 = 4.45,0.22
-#long range effect
+# Long range effect
 beta1 = 28500
-#chosen to normalise PSF
+# Chosen to normalise PSF
 v1 = 3.48
 
+# Go through each pixel and apply the effect of the scattering of an electron
+# at the centre. This is the point square function (PSF)
 for x in range(pix_size):
     for y in range(pix_size):
         r = np.sqrt((x-cx)**2 + (y-cx)**2)*10 #increase distance since each pixels is 10nm
@@ -76,15 +71,16 @@ for x in range(pix_size):
         sim[x,y]= PowerLaw(r,nu1,v1,gamma1,sigma1,beta1)
 
 
-#normalised PSF
+# Normalised PSF 
 exp = (exp - np.min(exp)) / (np.max(exp) - np.min(exp))
 sim = (sim - np.min(sim)) / (np.max(sim) - np.min(sim))
 
-#convolves
+# Convolution of the PSF and the shots
 EBLexp = signal.convolve(shots,exp, mode='same')
 EBLsim = signal.convolve(shots,sim, mode='same')
 
-#figures
+# Subplot of the experiment parameters and simulation, along with the cut-out
+# for both.
 
 fig = plt.figure()
 
@@ -113,15 +109,16 @@ plt.colorbar()
 
 plt.tight_layout()
 
-plt.savefig('C:/Users/suhai/.spyder-py3/Images/simulation_vs_experiment.png')
+#plt.savefig('simulation_vs_experiment.png')
 
-#each pixel is 10nm, so the image is 1 micro meter by 1 micrometer
+
 
 
 
 #%%
 
-#point spread function, line of sight from the center image.
+# Shows the point spread function as well as the intensity distribution
+# from the line of sight from the centre pixel.
 fig = plt.figure(figsize=(8,4))
 plt.subplot(1,2,1)
 plt.imshow(exp)
@@ -136,44 +133,54 @@ plt.title('Intensity distribution' ,size =10)
 
 plt.tight_layout()
 
-plt.savefig('C:/Users/suhai/.spyder-py3/Images/PSF_Gaussian')
+#plt.savefig('PSF_Gaussian')
+
+# Use the simulation parameter since they give a better result from the code
+# above.
 
 #%%
 
-#test pattern
-# 100nm wide by 10 micro meter space by 400nm, ten rectangles. 
+# Test pattern
+# 100nm wide by 10 micro meter space by 400nm, ten rectangles, 
 # mentioned in project brief.
+
+# Size of grid
 pix_x = 2001
 pix_y = 1000
-
 shots = np.zeros((pix_y,pix_x))
 
-does = [0.02,0.01,0.008,0.006,0.004,0.004,0.006,0.008,0.01,0.02]
+#dosage of each of the rectangles
+dose = [0.03, 0.02, 0.017, 0.0135, 0.019, 0.014, 0.013, 0.02, 0.02, 0.03]
 
-cx = int(pix_x/2)
-cy = int(pix_y/2)
+#centre pixels
+cx, cy = int(pix_x/2), int(pix_y/2)
 
-#second image: gaussian
+#second image: gauss
 exp = np.zeros((pix_y,pix_x))
 sim = np.zeros((pix_y,pix_x))
 
 for i in range(10):
-    #shots[40*i+350:40*i+360, 500:1500] = 1
-    shots[40*i+350:40*i+360, 500:1500] = does[i]
+    shots[40*i+350:40*i+360, 500:1500:2] = dose[i]
+    if i >0 and i<9:
+        shots[40*i+350:40*i+360, 750:1250:2] = dose[i]/1.2
+        shots[40*i+350:40*i+360, 850:1150:2] = dose[i]/1.4
+        shots[40*i+350:40*i+360, 950:1050:2] = dose[i]/1.5
 
 
+# point spread function
 for x in range(pix_x):
     for y in range(pix_y):
         r = np.sqrt((x-cx)**2 + (y-cy)**2)*10  #each pixel is 10nm
         exp[y,x]= PowerLaw(r,nu,v,gamma,sigma,beta)
-        
+
+# Normalize PSF
 exp = (exp - np.min(exp)) / (np.max(exp) - np.min(exp))
 
 
-#convolves
+# Convolves PSF with shots
 EBLexp = signal.convolve(shots,exp, mode='same')
 
-#figures 
+# Subplots for the mask, image, postive and negative resist
 
 fig = plt.figure()
 plt.subplot(2,2,1)
@@ -203,23 +210,23 @@ plt.colorbar(fraction=0.023)
 
 plt.tight_layout()
 
-plt.savefig('C:/Users/suhai/.spyder-py3/Images/positive and negative resist')
+#plt.savefig('Positive_and_negative_resist')
+
+# Positive and negative resist are the different type of resist used 
+# for development of substrates in lithography.
 
 #%%
-
 
 #test pattern and dose correction
 # cross
 pix_x = 200
 pix_y = 200
-
 shots = np.zeros((pix_y,pix_x))
-
-does = 0.06
+dose = 0.05
 
 #cross in the center
-shots[95:106, 60:140] = does
-shots[60:140, 95:106] = does
+shots[95:106, 60:140] = dose
+shots[60:140, 95:106] = dose
 
 cx = int(pix_x/2)
 cy = int(pix_y/2)
@@ -227,28 +234,24 @@ cy = int(pix_y/2)
 #second image: gaussian
 exp = np.zeros((pix_y,pix_x))
 
-
 for x in range(pix_x):
     for y in range(pix_y):
         r = np.sqrt((x-cx)**2 + (y-cy)**2)*10  #each pixel is 10nm
         exp[y,x]= PowerLaw(r,nu,v,gamma,sigma,beta)
         
 exp = (exp - np.min(exp)) / (np.max(exp) - np.min(exp))
-
 #convolves
 EBLexp = signal.convolve(shots,exp, mode='same')
-
 cut1 = np.where(EBLexp>1, 1, 0)
 
 
 
 #dose correction
-
 #change the dose of the center pixels
-does = 0.01
+dose = 0.01
 #correct horizontal bars and center
-shots[95:106, 90:111] = does
-shots[90:111, 95:106] = does
+shots[95:106, 90:111] = dose
+shots[90:111, 95:106] = dose
 
 shots[95:106, 61:65]  = 0.2
 shots[95:106, 136:140] = 0.2
@@ -257,7 +260,7 @@ shots[95:106, 136:140] = 0.2
 shots[61:65, 95:106]  = 0.2
 shots[136:140, 95:106]  = 0.2
 
-
+# PSF
 for x in range(pix_x):
     for y in range(pix_y):
         r = np.sqrt((x-cx)**2 + (y-cy)**2)*10  #each pixel is 10nm
@@ -266,7 +269,7 @@ for x in range(pix_x):
 exp = (exp - np.min(exp)) / (np.max(exp) - np.min(exp))
 EBLexp1 = signal.convolve(shots,exp, mode='same')
 
-
+# Subplots
 fig = plt.figure()
 plt.subplot(2,2,1)
 plt.imshow(EBLexp)
@@ -295,26 +298,31 @@ plt.colorbar(fraction=0.023)
 
 plt.tight_layout()
 
-plt.savefig('C:/Users/suhai/.spyder-py3/Images/does correction')
+#plt.savefig('Does_correction.png')
+
+# Change the dosage to correct the cut-out shape
+
 #%%
+
+# Create a graph of the intensity against radius for the simulation and
+# experiment parameters.
 
 #increae pixel size
 pix_size =int(1001)
 #First image: shots
 shots = np.zeros((pix_size,pix_size))
 
-#doseage
+#dosage
 dose = 1
 shots[300:600,450:560]=  dose
 
-#second image: gaussian
+#second image: PSF
 
 exp = np.zeros((pix_size,pix_size))
 sim = np.zeros((pix_size,pix_size))
 
 cx = int(pix_size/2)
 cy = int(pix_size/2)
-
 
 
 for x in range(pix_size):
@@ -334,16 +342,12 @@ EBLsim = signal.convolve(shots,sim, mode='same')
 
 
 x = np.linspace(0,pix_size,pix_size + 1)
-
 r = np.sqrt((x[:]-cx)**2) *10 
-
 r1 = r[cx:pix_size+1] 
 
 
 LOSexp = EBLexp[cx ,cy:pix_size]
-
 LOSsim = EBLsim[cx ,cy:pix_size]
-
 r2 = r[cx:pix_size] * 1e-3 *10  #radius in micrometers
 
 #plot logarithmic graphs
@@ -362,23 +366,21 @@ plt.ylabel('Intensity')
 
 plt.tight_layout()
 
-plt.savefig('C:/Users/suhai/.spyder-py3/Images/intensity_over_distance')
+#plt.savefig('intensity_over_distance')
 
 #%%
 
-### Here is an optomize version of the code to find the values of symmetrical
-### shape used for EBL. Suppose to find the values from the center of the image
-### to the edge. Doesn't give the expected result.
+### Here is an optimize version of the code above to find the values of
+### symmetrical shape used for EBL. This is suppose to find the values from the
+### centre of the image to the edge.
 
-
+# Code runs faster so can use larger grid size
 pix_size =int(1e6)
-
 cx = int(pix_size/2)
 cy = int(pix_size/2)
 
 
 #optimize code from above
-
 x = np.linspace(0,pix_size,pix_size + 1)
 #y = np.linspace(0,pix_size,pix_size + 1)
 
@@ -415,4 +417,4 @@ plt.ylabel('Intensity')
 
 plt.tight_layout()
 
-plt.savefig('intensity_over_distance')
+#plt.savefig('intensity_over_distance')

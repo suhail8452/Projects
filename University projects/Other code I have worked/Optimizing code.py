@@ -17,9 +17,9 @@ seed = 1234
 np.random.seed(seed)
 pos = np.random.random((3,N))
 start_time = time.time()
-# deliberately slow code to find nearest neighbours within periodic unit cube
+# Deliberately slow code to find nearest neighbours within periodic unit cube
 #                                                                            
-#  You may only change the code between here and the line "end_time=time.time()")   
+# You may only change the code between here and the line "end_time=time.time()")   
 #                         
 
 

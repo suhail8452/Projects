@@ -146,10 +146,10 @@ plt.subplots_adjust(wspace=0, hspace=0)
 
 #%%
 
-# graph the increase in ocean temperature per week over the year
+# Graph the increase in ocean temperature per week over the year
 # find the average of the earth temperature in each week, 
-#plot a function of ocean temperature on this side of the earth 
-#over time
+# plot a function of ocean temperature on this side of the earth 
+# over time
 
 means =[]
 
@@ -161,7 +161,7 @@ for i in range(51):
 
 #%%
 
-#anomalous data, so is deleted to get a better graph.
+# anomalous data, so is deleted to get a better graph.
 niko = np.delete(means,37)
 
 x=np.arange(0,50,1)
