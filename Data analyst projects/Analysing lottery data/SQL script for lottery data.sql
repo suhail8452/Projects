@@ -94,3 +94,12 @@ GROUP BY number_value;
 # lucky star values are 1-12
 select * from lucky_frequency
 order by frequency ASC;
+
+# Merge three total tables into one
+create table Total
+SELECT totalukprize.Date, totalukprize.Total_UKPrize, totalukwinners.Total_UKWinners, totalwinners.Total_Winners
+FROM totalukprize
+INNER JOIN totalukwinners ON totalukprize.Date = totalukwinners.Date
+INNER JOIN totalwinners ON totalukwinners.Date = totalwinners.Date;
+
+
