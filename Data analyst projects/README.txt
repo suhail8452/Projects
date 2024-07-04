@@ -1,1 +1,1 @@
-These are all the projects I have worked on independently.
+These are all the projects I have worked on.
