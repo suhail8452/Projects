@@ -1,1 +1,1 @@
-## Here are some smaller projects I have worked on.
+## Smaller coding project I have worked on.
