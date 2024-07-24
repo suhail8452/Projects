@@ -1,3 +1,7 @@
-### The code shows the effect of electron scattering on a material and how to control the dosage of the electron gun to cut-out the correct shape during the devlopment stage.
+## Simulating Electron Beam Lithography
 
-I worked on this project with partner as well, who did the short range method. Although none of his code is needed to run this code.
+This folder contain code to show how electrons scatter in a material to get the correct cut-out shape during the development state of the substrate.
+
+I worked on this project with my project partner (Felix).
+
+Repo: https://github.com/Spaceman05/QCD-Electron-beam.git
