@@ -1,5 +1,8 @@
-## Code for cloud dectection
+## Detection of clouds from satellite images
 
-This was a project with my partner and this shows my code from the project. To find the rest of the code: https://github.com/ehewins/processing-EUMETSAT-images.git
+This was a project with my project partner (Ellis Hewins) and contains my part of the project. The project involves removing clouds from european satellite images
+to get a clear image of the Earth without any clouds and these images can then be analysed.
 
-The project is to remove clouds from satellite images.
+
+The rest of the code for this project: https://github.com/ehewins/processing-EUMETSAT-images.git
+
