@@ -1,3 +1,3 @@
-## This is my 3rd year project. These pdf files contains snapshots of code to find the phase of quantum particles.
+## Third year project - Entangled Quantum Gates
 
-I worked on this project with my supervisor on my own.
+The goal of the project is to use Schrodinger's equation to find the phase transition of a qubit through numerical integration. I worked on this project on my own.
