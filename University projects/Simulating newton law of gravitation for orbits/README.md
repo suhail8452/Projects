@@ -1,4 +1,5 @@
-## Creates figures of orbits
+## Simulating Newton's Law of Gravitation
 
-The code integrates newton's law of gravitation using the intial condition defined by the user to find the path of the objects through numerical integrations.
-For more than two bodies newton's law of gravitation cannot be solved analytically.
+Integrating Newton's Law of Gravitation when provided the intial condition of the position and velocity, the orbits of the bodies can be found through numerical integration.
+For more than two bodies Newton's Law of Gravitation cannot be solved analytically.
+
